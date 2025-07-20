@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: gitea-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ~+wHVa+4ny~!
+      MYSQL_DATABASE: gitea
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: 2K(iQnrtT+Qf
+    ports:
+      - "13306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password --innodb
+
+  gitea:
+    image: gitea/gitea:latest
+    container_name: gitea
+    restart: always
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - DB_TYPE=mysql
+      - DB_HOST=db:3306
+      - DB_NAME=gitea
+      - DB_USER=admin
+      - DB_PASSWD=2K(iQnrtT+Qf
+      - GITEA__server__ROOT_URL=http://localhost:13000/
+      - GITEA__server__SSH_DOMAIN=localhost
+      - GITEA__server__HTTP_PORT=13000
+      - GITEA__server__DISABLE_SSH=true
+    depends_on:
+      - db
+    ports:
+      - "13000:13000"
+    volumes:
+      - gitea-data:/data
+
+volumes:
+  db-data:
+  gitea-data:
